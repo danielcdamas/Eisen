@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#3b5bdb" />
+  <meta name="description" content="Matriz de Eisenhower — capture e priorize suas tarefas em segundos. App offline, instalável." />
+  <title>Eisen — Matriz de Eisenhower</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-theme="auto">
+  <!-- ====================== TOP BAR ====================== -->
+  <header class="topbar" role="banner">
+    <div class="topbar__brand">
+      <span class="topbar__logo" aria-hidden="true">▦</span>
+      <h1 class="topbar__title">Eisen</h1>
+    </div>
+
+    <div class="topbar__search">
+      <input
+        id="searchInput"
+        type="search"
+        class="search__input"
+        placeholder="Buscar tarefas, #projeto, @pessoa…"
+        aria-label="Buscar tarefas"
+        autocomplete="off" />
+    </div>
+
+    <div class="topbar__actions">
+      <span id="streakBadge" class="streak" title="Dias seguidos com tarefas concluídas" hidden>
+        <span aria-hidden="true">🔥</span> <span id="streakCount">0</span>
+      </span>
+      <button id="themeToggle" class="iconbtn" type="button" aria-label="Alternar tema">◐</button>
+    </div>
+  </header>
+
+  <!-- ====================== MAIN ====================== -->
+  <main id="main" class="main" role="main" aria-live="polite">
+    <!-- views are rendered here -->
+  </main>
+
+  <!-- ====================== QUICK CAPTURE FAB ====================== -->
+  <button id="fab" class="fab" type="button" aria-label="Capturar nova tarefa (atalho: tecla N)">
+    <span aria-hidden="true">＋</span>
+  </button>
+
+  <!-- ====================== BOTTOM NAV (mobile) / SIDE NAV (desktop) ====================== -->
+  <nav id="nav" class="nav" role="navigation" aria-label="Navegação principal">
+    <button class="nav__item" data-view="today"  type="button"><span class="nav__icon" aria-hidden="true">☀</span><span class="nav__label">Hoje</span></button>
+    <button class="nav__item" data-view="matrix" type="button"><span class="nav__icon" aria-hidden="true">▦</span><span class="nav__label">Matriz</span></button>
+    <button class="nav__item" data-view="inbox"  type="button"><span class="nav__icon" aria-hidden="true">⬇</span><span class="nav__label">Entrada</span><span id="inboxBadge" class="nav__badge" hidden>0</span></button>
+    <button class="nav__item" data-view="search" type="button"><span class="nav__icon" aria-hidden="true">⌕</span><span class="nav__label">Busca</span></button>
+    <button class="nav__item" data-view="archive" type="button"><span class="nav__icon" aria-hidden="true">🗄</span><span class="nav__label">Arquivo</span></button>
+    <button class="nav__item nav__item--settings" data-view="settings" type="button"><span class="nav__icon" aria-hidden="true">⚙</span><span class="nav__label">Config</span></button>
+  </nav>
+
+  <!-- ====================== CAPTURE / EDIT SHEET ====================== -->
+  <div id="sheetBackdrop" class="backdrop" hidden></div>
+  <section id="sheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+    <div class="sheet__handle" aria-hidden="true"></div>
+    <h2 id="sheetTitle" class="sheet__title">Nova tarefa</h2>
+
+    <form id="taskForm" class="form" autocomplete="off">
+      <input type="hidden" id="f_id" />
+
+      <label class="form__label" for="f_title">Título</label>
+      <input id="f_title" class="form__input" type="text" required
+             placeholder="Ex.: Ligar p/ contador #financeiro @ana"
+             aria-describedby="titleHint" />
+      <p id="titleHint" class="form__hint">Use <code>#projeto</code> e <code>@pessoa</code> para etiquetar automaticamente.</p>
+
+      <!-- Quadrant picker -->
+      <fieldset class="form__quad">
+        <legend class="form__label">Quadrante</legend>
+        <div class="quadpick" role="radiogroup" aria-label="Escolher quadrante">
+          <button type="button" class="quadpick__btn" data-q="Q1"><b>Q1</b><span>Urgente + Importante</span><em>Faça já</em></button>
+          <button type="button" class="quadpick__btn" data-q="Q2"><b>Q2</b><span>Importante, não urgente</span><em>Agende</em></button>
+          <button type="button" class="quadpick__btn" data-q="Q3"><b>Q3</b><span>Urgente, não importante</span><em>Delegue</em></button>
+          <button type="button" class="quadpick__btn" data-q="Q4"><b>Q4</b><span>Nem urgente nem importante</span><em>Elimine</em></button>
+          <button type="button" class="quadpick__btn quadpick__btn--inbox" data-q=""><b>⬇</b><span>Caixa de Entrada</span><em>Classifico depois</em></button>
+        </div>
+      </fieldset>
+
+      <!-- Optional fields (collapsed — never in the way of fast capture) -->
+      <details class="form__more" id="moreDetails">
+        <summary>Mais detalhes (opcional)</summary>
+
+        <label class="form__label" for="f_desc">Descrição</label>
+        <textarea id="f_desc" class="form__input" rows="2" placeholder="Notas, contexto…"></textarea>
+
+        <div class="form__row">
+          <div>
+            <label class="form__label" for="f_due">Vencimento</label>
+            <input id="f_due" class="form__input" type="date" />
+          </div>
+          <div>
+            <label class="form__label" for="f_planned">Planejada p/</label>
+            <input id="f_planned" class="form__input" type="date" />
+          </div>
+        </div>
+
+        <label class="form__label" for="f_project">Projeto / contexto</label>
+        <input id="f_project" class="form__input" type="text" placeholder="#financeiro" />
+
+        <label class="form__label" for="f_links">Links (um por linha)</label>
+        <textarea id="f_links" class="form__input" rows="2" placeholder="https://…"></textarea>
+      </details>
+
+      <div class="form__actions">
+        <button type="button" id="sheetCancel" class="btn btn--ghost">Cancelar</button>
+        <button type="submit" class="btn btn--primary">Salvar</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ====================== TOASTS ====================== -->
+  <div id="toasts" class="toasts" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- ====================== CELEBRATION ====================== -->
+  <div id="celebrate" class="celebrate" hidden aria-hidden="true"></div>
+
+  <script src="js/db.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
