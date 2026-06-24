@@ -1,0 +1,21 @@
+{
+  "name": "Eisen — Matriz de Eisenhower",
+  "short_name": "Eisen",
+  "description": "Capture e priorize tarefas em segundos com a Matriz de Eisenhower. Offline-first, instalável.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f5f8",
+  "theme_color": "#3b5bdb",
+  "lang": "pt-BR",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icons/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Capturar tarefa", "short_name": "Capturar", "url": "./index.html?action=capture" },
+    { "name": "Hoje", "short_name": "Hoje", "url": "./index.html?view=today" }
+  ]
+}
