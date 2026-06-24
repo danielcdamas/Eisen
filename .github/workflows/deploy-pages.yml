@@ -29,6 +29,8 @@ jobs:
 
       - name: Configurar Pages (habilita se necessário)
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Empacotar o site (raiz do repositório)
         uses: actions/upload-pages-artifact@v3
